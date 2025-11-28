@@ -1,0 +1,36 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: Pathankhan@0707
+      MYSQL_DATABASE: blood_bank
+    ports:
+      - "3307:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend        # FIXED PATH
+    container_name: blood-bank-backend
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/blood_bank
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Pathankhan@0707
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend       # FIXED PATH
+    container_name: blood-bank-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  db-data:
